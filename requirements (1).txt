@@ -1,0 +1,29 @@
+# requirements.txt
+
+# Core libraries
+streamlit
+pandas
+pydantic==2.11.1
+transformers==4.39.3
+accelerate==0.28.0
+sentence-transformers==2.7.0
+faiss-cpu==1.7.4
+datasets==2.18.0
+huggingface_hub
+
+# LangChain and its components (compatible versions)
+langchain==0.2.9
+langchain-community==0.2.5
+langchain-core==0.2.20
+langchain-text-splitters==0.2.1
+langsmith==0.1.96
+
+# For 4-bit quantization (if used in your app)
+bitsandbytes==0.43.0
+
+# Note: torch, torchvision, torchaudio must be installed separately
+# with the appropriate CUDA version using a specific index URL.
+# See installation instructions below.
+
+# Note: flash-attn (for performance) is optional and requires specific installation.
+# See installation instructions below.
