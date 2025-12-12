@@ -74,7 +74,7 @@ Pré-requis : Python 3.8+
 
 ```bash
 # 1. Cloner le dépôt
-git clone https://github.com/votre-user/medinfo-ai.git
+git clone https://github.com/MOUISSAOUILeila1132/medinfo-ai.git
 cd medinfo-ai
 
 # 2. Créer un environnement virtuel
@@ -85,4 +85,4 @@ source venv/bin/activate  # Sur Windows : venv\Scripts\activate
 pip install -r requirements.txt
 
 # 4. Lancer l'application
-streamlit run app.py
+python app.py
