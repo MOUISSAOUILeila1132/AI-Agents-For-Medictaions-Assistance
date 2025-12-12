@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedInfo AI - Assistant Médical</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-text: #0f172a;
+            --secondary-text: #334155;
+            --accent-blue: #38bdf8; 
+            --accent-blue-dark: #0284c7;
+            --white: #ffffff;
+            --card-shadow: 0 10px 40px -10px rgba(0,0,0,0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: 
+                linear-gradient(rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.6)),
+                url("https://images.unsplash.com/photo-1585435557343-3b092031a831?q=80&w=1920&auto=format&fit=crop") no-repeat center center fixed;
+            background-size: cover;
+            color: var(--primary-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVBAR --- */
+        header {
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(15px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #e0f2fe;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+        }
+
+        .bot-avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #38bdf8, #2563eb);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.8);
+            position: relative;
+        }
+
+        .bot-avatar::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 10px;
+            height: 10px;
+            background-color: #4ade80;
+            border: 2px solid #fff;
+            border-radius: 50%;
+        }
+
+        .bot-avatar i { 
+            font-size: 1.2rem; 
+            color: #ffffff; 
+        }
+
+        nav ul { display: flex; list-style: none; gap: 40px; }
+        nav a { text-decoration: none; color: #f1f5f9; font-size: 0.95rem; font-weight: 500; transition: color 0.3s; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        nav a:hover, nav a.active { color: var(--accent-blue); text-shadow: 0 0 8px var(--accent-blue); }
+
+        .btn-outline {
+            padding: 0.6rem 1.2rem;
+            border: 1px solid var(--accent-blue);
+            color: #e0f2fe;
+            border-radius: 50px;
+            background: rgba(56, 189, 248, 0.1);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-outline:hover { background: var(--accent-blue); color: #0f172a; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4rem 1rem;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 300;
+            line-height: 1.2;
+            color: #ffffff; 
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.6);
+        }
+        h1 strong { font-weight: 700; }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto 3rem auto;
+            line-height: 1.6;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        /* --- CARTE INTERACTIVE --- */
+        .card {
+            background: rgba(15, 23, 42, 0.4); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            width: 100%;
+            max-width: 800px;
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-top: 1px solid rgba(56, 189, 248, 0.5);
+            position: relative;
+            z-index: 10;
+            transition: transform 0.3s;
+        }
+
+        .card:hover { transform: translateY(-5px); box-shadow: 0 20px 50px -10px rgba(56, 189, 248, 0.3); }
+
+        label {
+            display: block; font-weight: 600; margin-bottom: 1rem;
+            color: #e0f2fe; font-size: 1.1rem;
+            background: transparent;
+            letter-spacing: 0.5px;
+        }
+
+        .textarea-container {
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 1rem;
+            transition: all 0.3s;
+        }
+        .textarea-container:focus-within {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.3);
+        }
+
+        textarea {
+            width: 100%; border: none; resize: none; outline: none;
+            background: transparent;
+            font-size: 1rem; color: #ffffff; min-height: 100px;
+            font-weight: 400;
+        }
+        textarea::placeholder { color: #94a3b8; }
+        
+        .char-count { position: absolute; bottom: 10px; right: 15px; font-size: 0.75rem; color: #94a3b8; }
+
+        .btn-submit {
+            width: 100%; margin-top: 1.5rem; padding: 1rem;
+            border: none; border-radius: 50px;
+            background: linear-gradient(135deg, #0ea5e9, #3b82f6); 
+            color: white; font-size: 1rem; font-weight: 600;
+            cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px;
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.4);
+            transition: all 0.3s;
+        }
+        .btn-submit:hover { 
+            opacity: 1; transform: scale(1.02); 
+            box-shadow: 0 0 30px rgba(14, 165, 233, 0.6);
+        }
+
+        /* --- ZONE DE RÉPONSE AI --- */
+        .ai-response-area {
+            margin-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            display: none;
+        }
+        .ai-response-area.show {
+            display: block;
+            animation: slideOpen 0.5s ease-out;
+        }
+        @keyframes slideOpen {
+            from { opacity: 0; transform: scaleY(0.9) translateY(-10px); }
+            to { opacity: 1; transform: scaleY(1) translateY(0); }
+        }
+
+        .response-header {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 15px;
+            color: #e0f2fe; font-weight: 600; 
+            background: rgba(2, 132, 199, 0.4);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 8px 15px; border-radius: 8px; width: fit-content;
+        }
+
+        .response-content {
+            font-size: 0.95rem; line-height: 1.6; color: #1e293b;
+            background: rgba(255, 255, 255, 0.9); 
+            padding: 20px; border-left: 4px solid #38bdf8;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .disclaimer {
+            margin-top: 1.5rem; text-align: center; font-size: 0.75rem; color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .spinner {
+            display: none; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%; border-top-color: #fff; animation: spin 1s infinite linear;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <div class="bot-avatar">
+                <i class="fa-solid fa-robot"></i>
+            </div>
+            MedInfo AI
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="#" class="active">Home</a></li>
+                <li><a href="#">Ask Agent</a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+        </nav>
+        <button class="btn-outline">Medical Disclaimer</button>
+    </header>
+
+    <main class="hero">
+        <div class="hero-text">
+            <h1>AI-Powered Medication<br><strong>Intelligence</strong></h1>
+            <p class="subtitle">
+                Advanced algorithmic analysis for drug interactions, precise dosages, 
+                and safety protocols.
+            </p>
+        </div>
+
+        <div class="card">
+            <label for="questionInput">Ask Your Question</label>
+            
+            <form method="POST" action="/" id="questionForm">
+                <div class="textarea-container">
+                    <textarea id="questionInput" name="question" maxlength="500" placeholder="Type your query here (e.g., 'Interaction between Amoxicillin and Ibuprofen')..." required>{{ question }}</textarea>
+                    <span class="char-count" id="charCount">{{ question|length if question else 0 }}/500</span>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <span class="btn-text"><i class="fa-solid fa-microchip"></i> Analyze Query <i class="fa-solid fa-arrow-right"></i></span>
+                    <div class="spinner"></div>
+                </button>
+            </form>
+
+            {% if reponse %}
+            <div class="ai-response-area show" id="responseArea">
+                <div class="response-header"><i class="fa-solid fa-robot"></i> AI Analysis</div>
+                <div class="response-content" id="responseText">{{ reponse }}</div>
+            </div>
+            {% else %}
+            <div class="ai-response-area" id="responseArea">
+                <div class="response-header"><i class="fa-solid fa-robot"></i> AI Analysis</div>
+                <div class="response-content" id="responseText"></div>
+            </div>
+            {% endif %}
+
+            <div class="disclaimer"><i class="fa-solid fa-circle-exclamation"></i> Generated by AI. Verification by a medical professional is mandatory.</div>
+        </div>
+    </main>
+
+    <script>
+        const textarea = document.getElementById('questionInput');
+        const countSpan = document.getElementById('charCount');
+        const form = document.getElementById('questionForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.querySelector('.btn-text');
+        const spinner = document.querySelector('.spinner');
+
+        // Character counter
+        textarea.addEventListener('input', function() {
+            countSpan.textContent = `${this.value.length}/500`;
+        });
+
+        // Show spinner on form submit
+        form.addEventListener('submit', function() {
+            const inputVal = textarea.value.trim();
+            if(inputVal !== "") {
+                btnText.style.display = 'none';
+                spinner.style.display = 'block';
+                submitBtn.disabled = true;
+            }
+        });
+
+        // Initialize character count on page load
+        window.onload = function() {
+            countSpan.textContent = `${textarea.value.length}/500`;
+        };
+    </script>
+</body>
+</html>
